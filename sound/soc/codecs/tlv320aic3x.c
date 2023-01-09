@@ -99,9 +99,9 @@ static const struct reg_default aic3x_reg[] = {
 	{   4, 0x04 }, {   5, 0x00 }, {   6, 0x00 }, {   7, 0x00 },
 	{   8, 0x00 }, {   9, 0x00 }, {  10, 0x00 }, {  11, 0x01 },
 	{  12, 0x00 }, {  13, 0x00 }, {  14, 0x00 }, {  15, 0x80 },
-	{  16, 0x80 }, {  17, 0xff }, {  18, 0xff }, {  19, 0x78 },
-	{  20, 0x78 }, {  21, 0x78 }, {  22, 0x78 }, {  23, 0x78 },
-	{  24, 0x78 }, {  25, 0x00 }, {  26, 0x00 }, {  27, 0xfe },
+	{  16, 0x80 }, {  17, 0xff }, {  18, 0xff }, {  19, 0x28 },
+	{  20, 0x78 }, {  21, 0x28 }, {  22, 0x28 }, {  23, 0x78 },
+	{  24, 0x28 }, {  25, 0x00 }, {  26, 0x00 }, {  27, 0xfe },
 	{  28, 0x00 }, {  29, 0x00 }, {  30, 0xfe }, {  31, 0x00 },
 	{  32, 0x18 }, {  33, 0x18 }, {  34, 0x00 }, {  35, 0x00 },
 	{  36, 0x00 }, {  37, 0x00 }, {  38, 0x00 }, {  39, 0x00 },
@@ -272,6 +272,19 @@ static const char * const aic3x_adc_hpf[] = {
 static SOC_ENUM_DOUBLE_DECL(aic3x_adc_hpf_enum, AIC3X_CODEC_DFILT_CTRL, 6, 4,
 			    aic3x_adc_hpf);
 
+static const char * const aic3x_linein_level[] = {
+	"0dB", "-1.5dB", "-3dB", "-4.5dB",
+	"-6dB", "-7.5dB", "-9dB", "-10.5dB" };
+static SOC_ENUM_SINGLE_DECL(aic3x_rlinein_level_r_enum, LINE1R_2_RADC_CTRL, 3,
+			    aic3x_linein_level);
+static SOC_ENUM_SINGLE_DECL(aic3x_llinein_level_l_enum, LINE1L_2_LADC_CTRL, 3,
+			    aic3x_linein_level);
+static SOC_ENUM_SINGLE_DECL(aic3x_llinein_level_r_enum, LINE1L_2_RADC_CTRL, 3,
+			    aic3x_linein_level);
+static SOC_ENUM_SINGLE_DECL(aic3x_rlinein_level_l_enum, LINE1R_2_LADC_CTRL, 3,
+			    aic3x_linein_level);
+
+
 static const char * const aic3x_agc_level[] = {
 	"-5.5dB", "-8dB", "-10dB", "-12dB",
 	"-14dB", "-17dB", "-20dB", "-24dB" };
@@ -425,6 +438,11 @@ static const struct snd_kcontrol_new aic3x_snd_controls[] = {
 	/* Pop reduction */
 	SOC_ENUM("Output Driver Power-On time", aic3x_poweron_time_enum),
 	SOC_ENUM("Output Driver Ramp-up step", aic3x_rampup_step_enum),
+	
+	SOC_ENUM("Right Line to Right ADC level", aic3x_rlinein_level_r_enum),
+	SOC_ENUM("Right Line to Left ADC level", aic3x_rlinein_level_l_enum),
+	SOC_ENUM("Left Line to Right ADC level", aic3x_llinein_level_r_enum),
+	SOC_ENUM("Left Line to Left ADC level", aic3x_llinein_level_l_enum),
 };
 
 /* For other than tlv320aic3104 */
@@ -1560,8 +1578,10 @@ static int aic3x_init(struct snd_soc_component *component)
 	snd_soc_component_write(component, LADC_VOL, DEFAULT_GAIN);
 	snd_soc_component_write(component, RADC_VOL, DEFAULT_GAIN);
 	/* By default route Line1 to ADC PGA mixer */
-	snd_soc_component_write(component, LINE1L_2_LADC_CTRL, 0x0);
-	snd_soc_component_write(component, LINE1R_2_RADC_CTRL, 0x0);
+	snd_soc_component_write(component, LINE1L_2_LADC_CTRL, 0x10);
+	snd_soc_component_write(component, LINE1R_2_RADC_CTRL, 0x10);
+	snd_soc_component_write(component, LINE1R_2_LADC_CTRL, 0x10);
+	snd_soc_component_write(component, LINE1L_2_RADC_CTRL, 0x10);
 
 	/* PGA to HP Bypass default volume, disconnect from Output Mixer */
 	snd_soc_component_write(component, PGAL_2_HPLOUT_VOL, DEFAULT_VOL);
