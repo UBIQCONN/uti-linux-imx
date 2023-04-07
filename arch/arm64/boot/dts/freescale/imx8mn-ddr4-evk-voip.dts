@@ -1,0 +1,67 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2018-2019,2021 NXP
+ */
+
+#include "imx8mn-ddr4-evk.dts"
+
+/ {
+	model = "NXP i.MX8MNano DDR4 EVK board for VOIP";
+	compatible = "fsl,imx8mn-ddr4-evk", "fsl,imx8mn";
+};
+
+/delete-node/ sai5;
+
+&iomuxc {
+	pinctrl_gpio_keypad: gpiokeygrp {
+		fsl,pins = <
+			MX8MN_IOMUXC_SAI5_RXC_GPIO3_IO20	0x19
+		>;
+	};
+};
+
+&adv_bridge {
+	status = "disabled";
+};
+
+&i2c3 {
+	tca8418: keypad@34 {
+		compatible = "ti,tca8418";
+		reg = <0x34>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_keypad>;
+		interrupt-parent = <&gpio3>;
+		interrupts = <20 IRQ_TYPE_EDGE_FALLING>;
+		linux,keymap = < MATRIX_KEY(0x00, 0x01, BTN_0)
+			MATRIX_KEY(0x00, 0x00, BTN_1)
+			MATRIX_KEY(0x01, 0x01, BTN_2)
+			MATRIX_KEY(0x01, 0x00, BTN_3)
+			MATRIX_KEY(0x02, 0x00, BTN_4)
+			MATRIX_KEY(0x00, 0x03, BTN_5)
+			MATRIX_KEY(0x00, 0x02, BTN_6)
+			MATRIX_KEY(0x01, 0x03, BTN_7)
+			MATRIX_KEY(0x01, 0x02, BTN_8)
+			MATRIX_KEY(0x02, 0x02, BTN_9)
+		>;
+		keypad,num-rows = <4>;
+		keypad,num-columns = <4>;
+	};
+};
+
+&mipi_dsi {
+	panel@0 {
+		compatible = "et0240h6dma,st7785";
+		reg = <0>;
+		pinctrl-0 = <&pinctrl_mipi_dsi_en>;
+		reset-gpio = <&gpio1 8 GPIO_ACTIVE_LOW>;
+		dsi-lanes = <1>;
+		video-mode = <2>; /* 0: burst mode
+					       * 1: non-burst mode with sync event
+					       * 2: non-burst mode with sync pulse
+					       * 3: command mode
+					       */
+		panel-width-mm = <68>;
+		panel-height-mm = <121>;
+		status = "okay";
+	};
+};
