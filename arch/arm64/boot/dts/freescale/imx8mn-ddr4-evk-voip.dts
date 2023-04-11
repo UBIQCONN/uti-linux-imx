@@ -10,8 +10,6 @@
 	compatible = "fsl,imx8mn-ddr4-evk", "fsl,imx8mn";
 };
 
-/delete-node/ sai5;
-
 &iomuxc {
 	pinctrl_gpio_keypad: gpiokeygrp {
 		fsl,pins = <
@@ -32,19 +30,31 @@
 		pinctrl-0 = <&pinctrl_gpio_keypad>;
 		interrupt-parent = <&gpio3>;
 		interrupts = <20 IRQ_TYPE_EDGE_FALLING>;
-		linux,keymap = < MATRIX_KEY(0x00, 0x01, BTN_0)
-			MATRIX_KEY(0x00, 0x00, BTN_1)
-			MATRIX_KEY(0x01, 0x01, BTN_2)
-			MATRIX_KEY(0x01, 0x00, BTN_3)
-			MATRIX_KEY(0x02, 0x00, BTN_4)
-			MATRIX_KEY(0x00, 0x03, BTN_5)
-			MATRIX_KEY(0x00, 0x02, BTN_6)
-			MATRIX_KEY(0x01, 0x03, BTN_7)
-			MATRIX_KEY(0x01, 0x02, BTN_8)
-			MATRIX_KEY(0x02, 0x02, BTN_9)
+		linux,keymap = <
+			/* row, column, key */
+			MATRIX_KEY(0x03, 0x00, KEY_UP)   /* DPAD Up */
+			MATRIX_KEY(0x00, 0x01, KEY_DOWN) /* DPAD Down */
+			MATRIX_KEY(0x01, 0x00, KEY_LEFT) /* DPAD Left */
+			MATRIX_KEY(0x02, 0x01, KEY_RIGHT)/* DPAD Right */
+			MATRIX_KEY(0x01, 0x01, KEY_ENTER)/* DPAD Enter */
+			MATRIX_KEY(0x03, 0x02, KEY_1)
+			MATRIX_KEY(0x02, 0x02, KEY_2)
+			MATRIX_KEY(0x03, 0x04, KEY_3)
+			MATRIX_KEY(0x01, 0x02, KEY_4)
+			MATRIX_KEY(0x00, 0x02, KEY_5)
+			MATRIX_KEY(0x02, 0x04, KEY_6)
+			MATRIX_KEY(0x03, 0x03, KEY_7)
+			MATRIX_KEY(0x02, 0x03, KEY_8)
+			MATRIX_KEY(0x01, 0x04, KEY_9)
+			MATRIX_KEY(0x01, 0x03, KEY_NUMERIC_STAR)
+			MATRIX_KEY(0x00, 0x03, KEY_0)
+			MATRIX_KEY(0x00, 0x04, KEY_NUMERIC_POUND)
+			MATRIX_KEY(0x02, 0x00, BTN_1) /* Left Soft Button */
+			MATRIX_KEY(0x03, 0x01, BTN_3) /* Right Soft Button */
+			MATRIX_KEY(0x00, 0x00, BTN_2) /* Off-hook */
 		>;
 		keypad,num-rows = <4>;
-		keypad,num-columns = <4>;
+		keypad,num-columns = <5>;
 	};
 };
 
