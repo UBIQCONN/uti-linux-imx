@@ -536,6 +536,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
 	if (bdata->gpiod) {
 		bool active_low = gpiod_is_active_low(bdata->gpiod);
 
+		dev_info(dev, "gpio %d Initaiize\n", desc_to_gpio(bdata->gpiod));
 		if (button->debounce_interval) {
 			error = gpiod_set_debounce(bdata->gpiod,
 					button->debounce_interval * 1000);
