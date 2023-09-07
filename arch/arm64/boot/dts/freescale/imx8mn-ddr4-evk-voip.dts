@@ -200,6 +200,7 @@
 			gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
 			default-state = "on";
 		};
+
 	};
 
 	gpio-keys {
@@ -212,13 +213,13 @@
 		stealth {
 			label = "Steath";
 			gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_F1>;
+			linux,code = <KEY_SLEEP>;
 		};
 
 		lock {
 			label = "Lock";
 			gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_F2>;
+			linux,code = <KEY_MENU>;
 		};
 
 		ptt {
@@ -232,6 +233,7 @@
 			gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_F4>;
 		};
+
 
 	};
 
@@ -314,7 +316,7 @@
 		reg = <0x18>;
 		status = "okay";
 		ai3x-micbias-vg = <0x3>;
-		gpio-reset = <&gpio1 9 GPIO_ACTIVE_LOW>;
+		reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
 	};
 
 };
@@ -362,7 +364,7 @@
 			MATRIX_KEY(0x00, 0x04, KEY_NUMERIC_POUND)
 			MATRIX_KEY(0x02, 0x00, BTN_1) /* Left Soft Button */
 			MATRIX_KEY(0x03, 0x01, BTN_3) /* Right Soft Button */
-			MATRIX_KEY(0x00, 0x00, BTN_2) /* Off-hook */
+			MATRIX_KEY(0x00, 0x00, KEY_PHONE) /* Off-hook */
 		>;
 		keypad,num-rows = <4>;
 		keypad,num-columns = <5>;

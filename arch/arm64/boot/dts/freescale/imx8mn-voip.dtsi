@@ -127,6 +127,9 @@
 	phy-handle = <&ethphy0>;
 	fsl,magic-packet;
 	status = "okay";
+	phy-reset-gpios = <&gpio3 25 GPIO_ACTIVE_LOW>;
+	phy-reset-post-delay = <150>;
+	phy-reset-duration = <10>;
 
 	mdio {
 		#address-cells = <1>;
@@ -370,6 +373,7 @@
 };
 
 &snvs_pwrkey {
+	linux,keycode = <KEY_END>;
 	status = "okay";
 };
 
@@ -504,6 +508,7 @@
 			MX8MN_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
 			MX8MN_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
 			MX8MN_IOMUXC_SAI2_RXC_GPIO4_IO22	0x19
+			MX8MN_IOMUXC_SAI5_MCLK_GPIO3_IO25	0x19
 		>;
 	};
 
