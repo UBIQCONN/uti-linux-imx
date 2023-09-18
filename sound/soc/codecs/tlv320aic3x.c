@@ -359,11 +359,15 @@ static const struct snd_kcontrol_new aic3x_snd_controls[] = {
 		       PGAR_2_LLOPM_VOL, 0, 118, 1, output_stage_tlv),
 	SOC_SINGLE_TLV("Left Line Mixer DACR1 Playback Volume",
 		       DACR1_2_LLOPM_VOL, 0, 118, 1, output_stage_tlv),
+	SOC_SINGLE_TLV("Left Line Mixer DACL1 Playback Volume",
+		       DACL1_2_LLOPM_VOL, 0, 118, 1, output_stage_tlv),
 
 	SOC_SINGLE_TLV("Right Line Mixer PGAL Bypass Volume",
 		       PGAL_2_RLOPM_VOL, 0, 118, 1, output_stage_tlv),
 	SOC_SINGLE_TLV("Right Line Mixer DACL1 Playback Volume",
 		       DACL1_2_RLOPM_VOL, 0, 118, 1, output_stage_tlv),
+	SOC_SINGLE_TLV("Right Line Mixer DACR1 Playback Volume",
+		       DACR1_2_RLOPM_VOL, 0, 118, 1, output_stage_tlv),
 
 	SOC_SINGLE_TLV("Left HP Mixer PGAR Bypass Volume",
 		       PGAR_2_HPLOUT_VOL, 0, 118, 1, output_stage_tlv),
