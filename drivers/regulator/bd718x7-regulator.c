@@ -738,7 +738,7 @@ static struct bd718xx_regulator_data bd71847_regulators[] = {
 			.vsel_range_reg = BD718XX_REG_2ND_NODVS_BUCK_VOLT,
 			.vsel_range_mask = BD71847_BUCK4_RANGE_MASK,
 			.linear_range_selectors = bd71847_buck4_volt_range_sel,
-			.enable_mask = BD718XX_BUCK_EN,
+			.enable_mask = BD718XX_BUCK_EN | BD718XX_BUCK_PWM_FIX,
 			.enable_time = BD71847_BUCK4_STARTUP_TIME,
 			.owner = THIS_MODULE,
 		},

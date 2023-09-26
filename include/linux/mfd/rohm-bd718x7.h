@@ -113,6 +113,7 @@ enum {
 #define BD718XX_BUCK_SEL	0x02
 #define BD718XX_BUCK_EN		0x01
 #define BD718XX_BUCK_RUN_ON	0x04
+#define BD718XX_BUCK_PWM_FIX	0x08
 
 /* Generic LDO masks */
 #define BD718XX_LDO_SEL		0x80
