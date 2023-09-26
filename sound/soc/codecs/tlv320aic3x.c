@@ -440,6 +440,9 @@ static const struct snd_kcontrol_new aic3x_snd_controls[] = {
 	/* De-emphasis */
 	SOC_DOUBLE("De-emphasis Switch", AIC3X_CODEC_DFILT_CTRL, 2, 0, 0x01, 0),
 
+	/* Digital Effect */
+	SOC_DOUBLE("Digital Effect Switch", AIC3X_CODEC_DFILT_CTRL, 3, 1, 0x01, 0),
+
 	/* Input */
 	SOC_DOUBLE_R_TLV("PGA Capture Volume", LADC_VOL, RADC_VOL,
 			 0, 119, 0, adc_tlv),
@@ -1274,6 +1277,7 @@ static int aic3x_mute(struct snd_soc_dai *dai, int mute, int direction)
 		snd_soc_component_write(component, RDAC_VOL, rdac_reg);
 	}
 
+	mdelay(5);	
 	return 0;
 }
 
