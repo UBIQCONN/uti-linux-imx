@@ -482,7 +482,7 @@
 };
 
 &cpu_alert0 {
-       temperature = <93000>;
+       temperature = <100000>;
 };
 
 &cpu_crit0 {
