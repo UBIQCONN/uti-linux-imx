@@ -213,7 +213,7 @@
 		stealth {
 			label = "Steath";
 			gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_SLEEP>;
+			linux,code = <BTN_MODE>;
 		};
 
 		lock {
