@@ -1,0 +1,463 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ */
+
+/dts-v1/;
+
+#include "imx8mn.dtsi"
+#include "imx8mn-voip.dtsi"
+
+/ {
+	model = "NXP i.MX8MNano DDR4 EVK board";
+	compatible = "fsl,imx8mn-ddr4-evk", "fsl,imx8mn";
+};
+
+&A53_0 {
+	cpu-supply = <&buck2_reg>;
+};
+
+&A53_1 {
+	cpu-supply = <&buck2_reg>;
+};
+
+&A53_2 {
+	cpu-supply = <&buck2_reg>;
+};
+
+&A53_3 {
+	cpu-supply = <&buck2_reg>;
+};
+
+&ddrc {
+	operating-points-v2 = <&ddrc_opp_table>;
+
+	ddrc_opp_table: opp-table {
+		compatible = "operating-points-v2";
+
+		opp-25M {
+			opp-hz = /bits/ 64 <25000000>;
+		};
+
+		opp-100M {
+			opp-hz = /bits/ 64 <100000000>;
+		};
+
+		opp-600M {
+			opp-hz = /bits/ 64 <600000000>;
+		};
+	};
+};
+
+&i2c1 {
+	pmic@4b {
+		compatible = "rohm,bd71847";
+		reg = <0x4b>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pmic>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+		rohm,reset-snvs-powered;
+
+		regulators {
+			buck1_reg: BUCK1 {
+				regulator-name = "buck1";
+				regulator-min-microvolt = <700000>;
+				regulator-max-microvolt = <1300000>;
+				regulator-boot-on;
+				regulator-always-on;
+				regulator-ramp-delay = <1250>;
+				rohm,dvs-run-voltage = <850000>;
+				rohm,dvs-suspend-voltage = <750000>;
+			};
+
+			buck2_reg: BUCK2 {
+				regulator-name = "buck2";
+				regulator-min-microvolt = <700000>;
+				regulator-max-microvolt = <1300000>;
+				regulator-boot-on;
+				regulator-always-on;
+				regulator-ramp-delay = <1250>;
+				rohm,dvs-run-voltage = <1000000>;
+				rohm,dvs-idle-voltage = <900000>;
+				rohm,dvs-suspend-voltage = <0>;
+			};
+
+			buck4_reg: BUCK4 {
+				// BUCK6 in datasheet
+				regulator-name = "buck4";
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-boot-on;
+				regulator-always-on;
+			};
+
+			buck5_reg: BUCK5 {
+				// BUCK7 in datasheet
+				regulator-name = "buck5";
+				regulator-min-microvolt = <1605000>;
+				regulator-max-microvolt = <1995000>;
+				regulator-boot-on;
+				regulator-always-on;
+			};
+
+			buck6_reg: BUCK6 {
+				// BUCK8 in datasheet
+				regulator-name = "buck6";
+				regulator-min-microvolt = <800000>;
+				regulator-max-microvolt = <1400000>;
+				regulator-boot-on;
+				regulator-always-on;
+			};
+
+			ldo1_reg: LDO1 {
+				regulator-name = "ldo1";
+				regulator-min-microvolt = <1600000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-boot-on;
+				regulator-always-on;
+			};
+
+			ldo2_reg: LDO2 {
+				regulator-name = "ldo2";
+				regulator-min-microvolt = <800000>;
+				regulator-max-microvolt = <900000>;
+				regulator-boot-on;
+				regulator-always-on;
+			};
+
+			ldo3_reg: LDO3 {
+				regulator-name = "ldo3";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-boot-on;
+				regulator-always-on;
+			};
+
+			ldo6_reg: LDO6 {
+				regulator-name = "ldo6";
+				regulator-min-microvolt = <900000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-boot-on;
+				regulator-always-on;
+			};
+		};
+	};
+};
+
+&gpu {
+	assigned-clocks = <&clk IMX8MN_CLK_GPU_CORE_SRC>,
+			<&clk IMX8MN_CLK_GPU_SHADER_SRC>,
+			<&clk IMX8MN_CLK_GPU_AXI>,
+			<&clk IMX8MN_CLK_GPU_AHB>,
+			<&clk IMX8MN_GPU_PLL>,
+			<&clk IMX8MN_CLK_GPU_CORE_DIV>,
+			<&clk IMX8MN_CLK_GPU_SHADER_DIV>;
+	assigned-clock-parents = <&clk IMX8MN_GPU_PLL_OUT>,
+			<&clk IMX8MN_GPU_PLL_OUT>,
+			<&clk IMX8MN_SYS_PLL1_800M>,
+			<&clk IMX8MN_SYS_PLL1_800M>;
+	assigned-clock-rates = <0>, <0>, <800000000>, <400000000>, <1200000000>,
+			<400000000>, <400000000>;
+	status= "okay";
+};
+
+
+/ {
+	/delete-node/ audio-codec;
+	/delete-node/ ir-receiver;
+	/delete-node/ sound-wm8524;
+	/delete-node/ sound-micfil;
+	/delete-node/ sound-ak5558;
+	/delete-node/ sound-ak5558;
+	/delete-node/ gpio-leds;
+
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pinctrl-names = "default";
+		pwms = <&pwm1 0 20000 0>;	/* 700000 ns = 1337Hz */
+		brightness-levels = <0 100>;
+		num-interpolated-steps = <100>;
+		default-brightness-level = <50>;
+		status = "okay";
+	};
+
+	gpio-keys {
+
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_keypad>;
+		status = "okay";
+
+		sw4: volume_up {
+			label = "Volume Up";
+			gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEUP>;
+		};
+
+		sw3: volume_down {
+			label = "Volume Down";
+			gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_VOLUMEDOWN>;
+		};
+
+		ptt {
+			label = "Ptt";
+			gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_F3>;
+		};
+
+		screenoff {
+			label = "screenoff";
+			gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_POWER>;
+			wakeup-source;
+		};
+
+	};
+
+	handset_spk_amp: analog-amplifier@0 {
+		compatible = "simple-audio-amplifier";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_handset_spk_amp>;
+		enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+
+		sound-name-prefix = "Handset Speaker Amp";
+	};
+
+	handfree_spk_amp: analog-amplifier@1 {
+		compatible = "simple-audio-amplifier";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_handfree_spk_amp>;
+		enable-gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+
+		sound-name-prefix = "Handfree Speaker Amp";
+	};
+
+	sound_tlv320aic3104: sound-tlv320aic3104 {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "tlv320aic3104-audio";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,frame-master = <&codecdai>;
+		simple-audio-card,bitclock-master = <&codecdai>;
+		simple-audio-card,aux-devs = <&handset_spk_amp>, <&handfree_spk_amp>;
+		simple-audio-card,widgets =
+			"Line", "Line IN",
+			"Speaker", "Handfree Speaker",
+			"Speaker", "Handset Speaker";
+		simple-audio-card,routing =
+			"LINE1L", "Line IN",
+			"LINE1R", "Line IN",
+			"Handfree Speaker Amp INL", "LLOUT",
+			"Handset Speaker Amp INR", "RLOUT",
+			"Handfree Speaker", "Handfree Speaker Amp OUTL",
+			"Handset Speaker", "Handset Speaker Amp OUTR";
+
+		cpudai: simple-audio-card,cpu {
+			sound-dai = <&sai3>;
+	/*		dai-tdm-slot-num = <2>;
+			dai-tdm-slot-width = <32>;*/
+		};
+
+		codecdai: simple-audio-card,codec {
+			sound-dai = <&tlv320aic3x>;
+			clocks = <&clk IMX8MN_CLK_SAI3_ROOT>;
+		};
+	};
+};
+
+&sai3 {
+	#sound-dai-cells = <0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_sai3>;
+	assigned-clocks = <&clk IMX8MN_CLK_SAI3>;
+	assigned-clock-parents = <&clk IMX8MN_AUDIO_PLL1_OUT>;
+	assigned-clock-rates = <24576000>;
+	status = "okay";
+};
+
+&adv_bridge {
+	status = "disabled";
+};
+
+&usdhc1 {
+	status = "disabled";
+};
+
+&i2c2 {
+	/delete-node/ tcpc@50;
+
+	tlv320aic3x: tlv320aic3x@18 {
+		#sound-dai-cells = <0>;
+		compatible = "ti,tlv320aic3104";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_audio_reset>;
+		reg = <0x18>;
+		status = "okay";
+		ai3x-micbias-vg = <0x3>;
+		gpio-reset = <&gpio1 9 GPIO_ACTIVE_LOW>;
+	};
+
+};
+
+&i2c3 {
+	/delete-node/ ak5558@13;
+	/delete-node/ ak4497@11;
+	/delete-node/ ov5640_mipi@3c;
+	touchscreen@38 {
+	        compatible = "hycon,hy4633";
+	        reg = <0x38>;
+		pinctrl-0 = <&pinctrl_ts>;
+	        interrupt-parent = <&gpio1>;
+	        interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+	        reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
+	};
+};
+
+&i2c4 {
+	clock-frequency = <400000>;
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_i2c4>;
+	pinctrl-1 = <&pinctrl_i2c4_gpio>;
+	scl-gpios = <&gpio5 20 GPIO_ACTIVE_HIGH>;
+	sda-gpios = <&gpio5 21 GPIO_ACTIVE_HIGH>;
+	status = "ok";
+	
+	ams@39 {
+		compatible = "tmd2725";
+		reg = <0x39>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
+		tmd,irq-gpio = <&gpio1 10 0x2002>;
+		pinctrl-names = "tmd2725_default";
+		pinctrl-0 = <&tmd2725_default>;
+		tmd,power_always_on = <1>;
+		tmd,has_als = <1>;
+		tmd,has_ps = <1>;
+		tmd,tp_moudle_count = <3>;
+		//[module_id] [which_seg] [d_factor] ch0[1] ch1[0] ch0[1] ch1[0]
+		tmd,tp0 = "0","0","589","1000","213","708","73";
+		//[module_id] [which_seg] [d_factor] ch0[1] ch1[0] ch0[1] ch1[0]
+		tmd,tp1 = "1","1","615","932","260","800","270";
+		//[module_id] [which_seg] [d_factor] ch0[1] ch1[0] ch0[1] ch1[0]
+		tmd,tp2 = "2","0","615","1000","260","800","270";
+	};
+};
+
+&mipi_dsi {
+	panel@0 {
+		compatible = "surelink,etml050015dha"; 
+		reg = <0>;
+		pinctrl-0 = <&pinctrl_mipi_dsi_en_open_drain>;
+		reset-gpio = <&gpio1 8 GPIO_ACTIVE_LOW>;
+		dsi-lanes = <4>;
+		video-mode = <2>; /* 0: burst mode
+					       * 1: non-burst mode with sync event
+					       * 2: non-burst mode with sync pulse
+					       * 3: command mode
+					       */
+		panel-width-mm = <68>;
+		panel-height-mm = <121>;
+		timing-mode = <2>;
+		status = "okay";
+	};
+};
+
+
+&pwm1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_bl>;
+};
+
+&iomuxc {
+
+	/delete-node/ synaptics_dsx_iogrp;
+	/delete-node/ gpioledgrp;
+	/delete-node/ csi_rst_grp;
+	/* This is for both PWM and voltage regulators for display */
+
+	pinctrl_gpio_keypad: gpiokeygrp2 {
+		fsl,pins = <
+			MX8MN_IOMUXC_SAI5_RXC_GPIO3_IO20	0x16
+			MX8MN_IOMUXC_SAI5_RXD0_GPIO3_IO21	0x16
+			MX8MN_IOMUXC_SAI5_RXD1_GPIO3_IO22	0x16
+			MX8MN_IOMUXC_SAI5_RXD2_GPIO3_IO23	0x16
+		>;
+	};
+
+	pinctrl_bl: pwm1grp {
+		fsl,pins = <
+			MX8MN_IOMUXC_GPIO1_IO01_PWM1_OUT	0x16
+		>;
+	};
+
+	pinctrl_ts: touchgrp {
+		fsl,pins = <
+			MX8MN_IOMUXC_GPIO1_IO11_GPIO1_IO11	0x16	
+			MX8MN_IOMUXC_GPIO1_IO12_GPIO1_IO12	0x16	
+		>;
+	};
+
+	tmd2725_default: blgrp {
+		fsl,pins = <
+			MX8MN_IOMUXC_GPIO1_IO10_GPIO1_IO10	0x16	
+		>;
+	};
+
+	pinctrl_audio_reset: audio-reset {
+		fsl,pins = <
+			MX8MN_IOMUXC_GPIO1_IO09_GPIO1_IO9	0x19
+		>;
+	};
+
+	pinctrl_handset_spk_amp: audioamp1 {
+		fsl,pins = <
+			MX8MN_IOMUXC_GPIO1_IO06_GPIO1_IO6	0x19
+		>;
+	};
+
+	pinctrl_handfree_spk_amp: audioamp2 {
+		fsl,pins = <
+			MX8MN_IOMUXC_GPIO1_IO07_GPIO1_IO7	0x19
+		>;
+	};
+
+	pinctrl_mipi_dsi_en_open_drain: mipi_dsi_en_open_drain {
+		fsl,pins = <
+			MX8MN_IOMUXC_GPIO1_IO08_GPIO1_IO8	0x36
+		>;
+	};
+};
+
+&mipi_csi_1 {
+	/delete-node/ port@0;
+
+};
+
+
+&usbotg1 {
+
+        dr_mode = "peripheral"; 
+        srp-disable;
+        hnp-disable;
+        adp-disable;
+        disable-over-current;
+
+        /delete-property/ usb-role-switch;
+
+        status = "okay";
+};
+
+&usdhc2 {
+        status = "disabled";
+};
+
+
+&cpu_alert0 {
+       temperature = <100000>;
+};
+
+&cpu_crit0 {
+       temperature = <105000>;
+};

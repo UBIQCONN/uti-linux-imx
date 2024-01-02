@@ -1,0 +1,14 @@
+obj-$(CONFIG_NUBIA_SENSORS_FP)                  += gf318m/
+obj-$(CONFIG_NUBIA_SENSORS_FP)                  += fpc1020/
+obj-$(CONFIG_NUBIA_SENSORS_FP)			+= gf3208/
+obj-$(CONFIG_NUBIA_SENSORS_FP)			+= gf5216m/
+obj-$(CONFIG_NUBIA_FP_AUTODETECT)		+= fp_autodetect.o
+obj-$(CONFIG_NUBIA_SENSORS_PROX_PA224)		+= txc_pa224.o
+obj-$(CONFIG_NUBIA_SENSORS_PROX_PA22X)		+= txc/
+obj-$(CONFIG_NUBIA_SENSORS_ALS_PROX_ADSP9922)   += apds9922/
+obj-$(CONFIG_NUBIA_SENSORS_RGB_BH1745)		+= rohm_bh1745.o
+obj-$(CONFIG_NUBIA_SENSORS_HALL_DEVICE)  	+= hall_device.o
+obj-$(CONFIG_NUBIA_SENSORS_PRESSURE_DEVICE)	+= pressure_device_ndt.o
+obj-$(CONFIG_NUBIA_SENSORS_IR_REMOTE_I_THREE)	+= i_three.o
+obj-$(CONFIG_NUBIA_SENSORS_TMD2725)		+= tmd2725/
+
