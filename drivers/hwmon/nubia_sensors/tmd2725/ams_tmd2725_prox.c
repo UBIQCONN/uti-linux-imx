@@ -245,7 +245,7 @@ static void tmd2725_report_prox(struct tmd2725_chip *chip)
 {
 	if (chip->p_idev) {
 		if (chip->prx_inf.detected != chip->prx_inf.last_detected) {
-			input_report_rel(chip->p_idev, REL_RZ, chip->prx_inf.detected);
+			input_report_abs(chip->p_idev, ABS_DISTANCE, chip->prx_inf.detected);
 			input_sync(chip->p_idev);
 			SENSOR_LOG_INFO("prox status: %s(%d)\n",
 				chip->prx_inf.detected == PROX_NEAR ? "NEAR" : "FAR",
@@ -783,7 +783,7 @@ static ssize_t tmd2725_prox_flush_show(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
 	struct tmd2725_chip *chip = dev_get_drvdata(dev);
-	input_report_rel(chip->p_idev, REL_RZ, chip->prx_inf.detected);
+	input_report_abs(chip->p_idev, ABS_DISTANCE, chip->prx_inf.detected);
 	input_sync(chip->p_idev);
 	return sprintf(buf, "%s\n", DEVICE_CHIP_NAME);
 }
@@ -980,9 +980,9 @@ static int tmd2725_irq_handler_locked(struct tmd2725_chip *chip, u8 status)
 
 	    /* Open debug mode, report raw data */
 	    if (chip->prx_inf.prox_raw_debug) {
-			    input_report_rel(chip->p_idev, REL_MISC, chip->prx_inf.raw);
-			    input_sync(chip->p_idev);
-			    return ret;
+			input_report_abs(chip->p_idev, ABS_DISTANCE, chip->prx_inf.raw);
+			input_sync(chip->p_idev);
+			return ret;
 	    }
 	    /* determine detect/release, report results */
 	    tmd2725_get_prox(chip);
@@ -1059,9 +1059,8 @@ static int tmd2725_ps_input_device_init(struct tmd2725_chip *chip)
 	}
 	chip->p_idev->name = chip->pdata->prox_name;
 	chip->p_idev->id.bustype = BUS_I2C;
-	set_bit(EV_REL, chip->p_idev->evbit);
-	set_bit(REL_RZ,  chip->p_idev->relbit);
-	set_bit(REL_MISC,  chip->p_idev->relbit);
+	input_set_abs_params(chip->p_idev, ABS_DISTANCE, 0,
+			PS_DATA_MAX, 0, 0);
 
 	dev_set_drvdata(&chip->p_idev->dev, chip);
 	ret = input_register_device(chip->p_idev);
