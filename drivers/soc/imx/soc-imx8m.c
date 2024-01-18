@@ -63,6 +63,13 @@ static u32 imx8mq_soc_revision_from_atf(void)
 static inline u32 imx8mq_soc_revision_from_atf(void) { return 0; };
 #endif
 
+extern char* (*arch_read_hardware_id)(void);
+static char imx_soc_str[256];
+static char *imx_read_hardware_id(void)
+{
+	return imx_soc_str;
+}
+
 static u32 __init imx8mq_soc_revision(void)
 {
 	struct device_node *np;
@@ -245,12 +252,15 @@ static int __init imx8_soc_init(void)
 
 	pr_info("SoC: %s revision %s\n", soc_dev_attr->soc_id,
 		soc_dev_attr->revision);
+	snprintf(imx_soc_str, 256, "%s %s", soc_dev_attr->family, soc_dev_attr->soc_id);
 
 	if (IS_ENABLED(CONFIG_ARM_IMX_CPUFREQ_DT))
 		platform_device_register_simple("imx-cpufreq-dt", -1, NULL, 0);
 
 	if (of_machine_is_compatible("fsl,imx8mq"))
 		imx8mq_noc_init();
+
+	arch_read_hardware_id = imx_read_hardware_id;
 
 	return 0;
 
