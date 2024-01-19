@@ -252,7 +252,7 @@ static int __init imx8_soc_init(void)
 
 	pr_info("SoC: %s revision %s\n", soc_dev_attr->soc_id,
 		soc_dev_attr->revision);
-	snprintf(imx_soc_str, 256, "%s %s", soc_dev_attr->family, soc_dev_attr->soc_id);
+	snprintf(imx_soc_str, 256, "NXP Semiconductor, Inc. %s %s", soc_dev_attr->soc_id, soc_dev_attr->revision);
 
 	if (IS_ENABLED(CONFIG_ARM_IMX_CPUFREQ_DT))
 		platform_device_register_simple("imx-cpufreq-dt", -1, NULL, 0);
