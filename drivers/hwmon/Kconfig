@@ -2157,4 +2157,6 @@ config MXC_MMA8451
 	select INPUT_POLLDEV
 	default y
 
+source "drivers/hwmon/nubia_sensors/Kconfig"
+
 endif # HWMON

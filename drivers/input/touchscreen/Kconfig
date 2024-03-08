@@ -1360,6 +1360,18 @@ config TOUCHSCREEN_ZINITIX
 	  To compile this driver as a module, choose M here: the
 	  module will be called zinitix.
 
+config TOUCHSCREEN_HYCON
+	tristate "Hycon touchscreen support"
+	depends on I2C
+	help
+	  Say Y here if you have a touchscreen using Hycon HY461x,
+	  or something similar enough.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called zinitix.
+
 source "drivers/input/touchscreen/synaptics_dsx/Kconfig"
 endif
 

@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright 2019 NXP
+ */
+
+/dts-v1/;
+
+#include "imx8mn-ddr4-evk-sva500.dts"
+
+
+&mipi_dsi {
+	panel@0 {
+		compatible = "surelink,yb_tg7201280s03a"; 
+	};
+};
+
+&i2c3 {
+	/delete-node/ touchscreen@38;
+        eeti@2a {
+		compatible = "eeti,egalax_i2c";
+		reg = <0x2a>;
+		pinctrl-0 = <&pinctrl_ts>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <11 8>;
+		int-gpios = <&gpio1 11 0>;
+        };
+};
+
